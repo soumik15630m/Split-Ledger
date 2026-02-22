@@ -116,7 +116,7 @@ Do not add a service function without a test. Do not add an API endpoint without
 Test coverage on core services must remain ≥ 90%. You can check this with:
 
 ```bash
-pytest --cov=app/services --cov=app/schemas --cov-report=term-missing
+pytest --cov=app.services --cov=app.schemas --cov-report=term-missing
 ```
 
 ---

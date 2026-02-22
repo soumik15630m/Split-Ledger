@@ -184,13 +184,12 @@ Invariants are correctness rules that must hold at all times. They are not featu
 
 Every other financial invariant is a consequence or guard of INV-1. If INV-1 holds for every expense, then INV-2 (balance sum = zero) is a mathematical identity. If INV-1 is violated — even once — all balance figures become untrustworthy.
 
-INV-1 is enforced at three independent points:
+INV-1 is enforced at four independent points:
 
 1. **marshmallow schema** — rejects `amount` with more than 2 decimal places before the service is called
 2. **`expense_service.py`** — computes `sum(splits)`, compares to `expense.amount` using `Decimal`, raises `SPLIT_SUM_MISMATCH` before any DB write
-3. **Unit test** — `test_split_sum_invariant.py` tests the check function in isolation, independent of Flask and the DB
-
-If the service layer check is somehow removed, the database still has no constraint that enforces it (SQL `CHECK` constraints across related tables are complex and database-specific). The service layer is the authoritative enforcement point.
+3. **PostgreSQL trigger** (`trg_splits_sum_check`) — fires AFTER INSERT, UPDATE, or DELETE on the `splits` table; re-computes `sum(amount)` for the affected expense and raises an exception if it does not equal `expenses.amount`. Created in migration `002_add_split_sum_trigger.py`. This is the final defence against any bypass of the service layer (direct DB writes, migration scripts, seed data, etc.).
+4. **Unit test** — `test_split_sum_invariant.py` tests the service-layer check function in isolation, independent of Flask and the DB
 
 ### Why Decimal, Not Float
 
@@ -479,7 +478,7 @@ Key files and what they prove:
 Core service modules must maintain ≥ 90% line coverage. This is enforced in CI:
 
 ```bash
-pytest --cov=app/services --cov=app/schemas --cov-fail-under=90
+pytest --cov=app.services --cov=app.schemas --cov-fail-under=90
 ```
 
 Below 90% is a failing build.

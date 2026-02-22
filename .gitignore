@@ -1,7 +1,8 @@
 # ── Environment & Secrets ────────────────────────────────────────────────────
 .env
-.env.*
-!.env.example
+backend/.env
+backend/.env.example
+!backend/.env.example
 
 # ── Python ───────────────────────────────────────────────────────────────────
 __pycache__/
@@ -26,7 +27,7 @@ lib64/
 venv/
 .venv/
 env/
-.env/
+backend/.env/
 ENV/
 
 # pytest

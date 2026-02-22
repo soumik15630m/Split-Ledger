@@ -1,0 +1,61 @@
+# ─────────────────────────────────────────────────────────────────────────
+# SplitLedger — Docker Compose
+#
+# Runs TWO PostgreSQL databases:
+#   • splitledger      → development / manual testing
+#   • splitledger_test → automated test suite (wiped between runs)
+#
+# Usage:
+#   docker compose up -d        # start both DBs in the background
+#   docker compose down         # stop (data preserved in volumes)
+#   docker compose down -v      # stop AND delete all data
+#   docker compose logs -f db   # tail database logs
+# ─────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── Development database ─────────────────────────────────────────────
+  db:
+    image: postgres:15-alpine          # lightweight Alpine-based image
+    container_name: splitledger_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     splitledger
+      POSTGRES_PASSWORD: splitledger_dev_password
+      POSTGRES_DB:       splitledger
+    ports:
+      - "5432:5432"                    # expose on localhost:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./docker/init:/docker-entrypoint-initdb.d   # runs init scripts on first boot
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U splitledger -d splitledger"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Test database ─────────────────────────────────────────────────────
+  db_test:
+    image: postgres:15-alpine
+    container_name: splitledger_db_test
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     splitledger
+      POSTGRES_PASSWORD: splitledger_test_password
+      POSTGRES_DB:       splitledger_test
+    ports:
+      - "5433:5432"                    # different host port to avoid conflict
+    volumes:
+      - pg_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U splitledger -d splitledger_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+volumes:
+  pg_data:
+    name: splitledger_pg_data
+  pg_test_data:
+    name: splitledger_pg_test_data

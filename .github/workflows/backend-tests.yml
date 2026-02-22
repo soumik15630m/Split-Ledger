@@ -1,0 +1,45 @@
+name: Backend Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: splitledger
+          POSTGRES_PASSWORD: splitledger_test_password
+          POSTGRES_DB: splitledger_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U splitledger -d splitledger_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements-dev.txt
+
+      - name: Run Backend Tests With Coverage Gate
+        env:
+          FLASK_ENV: testing
+          TEST_DATABASE_URL: postgresql://splitledger:splitledger_test_password@localhost:5432/splitledger_test
+        run: |
+          pytest backend/tests --cov=app.services --cov=app.schemas --cov-fail-under=90
