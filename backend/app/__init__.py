@@ -23,11 +23,10 @@ Note on model imports:
 
 from __future__ import annotations
 
-import logging
 import traceback
 from decimal import Decimal
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask.json.provider import DefaultJSONProvider
 from marshmallow import ValidationError
 
@@ -107,6 +106,7 @@ def create_app(config_name: str = "development") -> Flask:
 
     # ── Error handlers ─────────────────────────────────────────────────────
     _register_error_handlers(app)
+    _register_cors(app)
 
     return app
 
@@ -239,6 +239,31 @@ def _register_error_handlers(app: Flask) -> None:
                 "message": "An unexpected error occurred. Please try again later.",
             }
         }), 500
+
+
+def _register_cors(app: Flask) -> None:
+    """
+    Adds CORS headers for browser-based local development.
+
+    By default this is enabled when DEBUG or TESTING is true so a frontend
+    served from another local port (for example :8000) can call the API on
+    :5000 with Authorization headers.
+    """
+
+    @app.after_request
+    def add_cors_headers(response):
+        origin = request.headers.get("Origin")
+        allow_all = bool(app.config.get("DEBUG") or app.config.get("TESTING"))
+
+        if allow_all:
+            # Reflect origin when present so bearer-auth requests from local
+            # dev servers are accepted by browsers.
+            response.headers["Access-Control-Allow-Origin"] = origin if origin else "*"
+            response.headers["Vary"] = "Origin"
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
+
+        return response
 
 
 def _code_to_message(code: str) -> str:
