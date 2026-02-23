@@ -68,7 +68,7 @@ splitledger/
 │       ├── types/           # TypeScript interfaces
 │       └── schemas/         # Zod validation schemas
 │
-├── CLAUDE.md                # AI agent constraints
+├── GUIDE(AI & HUMAN).md     # AI agent constraints
 ├── ARCHITECTURE.md          # system design and decisions
 ├── AI_USAGE.md              # AI usage log and verification notes
 ├── docker-compose.yml
