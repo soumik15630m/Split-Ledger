@@ -273,7 +273,7 @@ pytest --cov=app.services --cov=app.schemas --cov-report=term-missing
 
 ```bash
 cd backend
-flask run --debug
+flask run --debug OR python -m flask --app app run --debug
 ```
 
 The API is now live at **http://localhost:5000/api/v1/**

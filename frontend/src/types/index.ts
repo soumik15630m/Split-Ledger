@@ -49,7 +49,7 @@ export interface User {
 export interface Group {
   id:         number
   name:       string
-  owner_id:   number
+  owner_user_id:   number
   created_at: ISODateTime
 }
 

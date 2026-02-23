@@ -39,6 +39,27 @@ export function useCreateExpense(groupId: number) {
   })
 }
 
+export function useUpdateExpense(groupId: number) {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, payload }: { id: number; payload: any }) => {
+      // Using axios directly to hit our new PUT route
+      const { data } = await api.put(`/api/v1/groups/${groupId}/expenses/${id}`, payload);
+      return data;
+    },
+    onSuccess: () => {
+      // Refresh the lists instantly
+      qc.invalidateQueries({ queryKey: ['expenses', groupId] });
+      qc.invalidateQueries({ queryKey: ['balances', groupId] });
+      toast.success('Expense updated!'); // Added the green success toast!
+    },
+    onError: (err) => {
+      toast.error(extractApiError(err).message);
+    }
+  });
+}
+
 export function usePatchExpense(groupId: number) {
   const qc = useQueryClient()
   return useMutation({

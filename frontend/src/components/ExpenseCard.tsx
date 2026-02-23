@@ -81,7 +81,7 @@ export function ExpenseCard({ expense, onDelete, onEdit, className }: ExpenseCar
             <p className="text-xs font-medium text-text-3 uppercase tracking-wide mb-2">
               Split breakdown
             </p>
-            {expense.splits.map(split => (
+            {expense.splits?.map(split => (
               <div key={split.user_id} className="flex items-center gap-2">
                 <Avatar name={split.username} size="xs" />
                 <span className="text-sm text-text-2 flex-1">{split.username}</span>

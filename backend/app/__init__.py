@@ -30,7 +30,7 @@ from flask import Flask, jsonify, request
 from flask.json.provider import DefaultJSONProvider
 from marshmallow import ValidationError
 
-from config import config_by_name, validate_production_config
+from backend.config import config_by_name, validate_production_config
 
 
 # ── Custom JSON provider ───────────────────────────────────────────────────
@@ -124,6 +124,7 @@ def _register_blueprints(app: Flask) -> None:
     from app.routes.expenses import expenses_bp
     from app.routes.groups import groups_bp
     from app.routes.settlements import settlements_bp
+    from app.routes.users import users_bp
 
     app.register_blueprint(auth_bp,        url_prefix="/api/v1/auth")
     app.register_blueprint(groups_bp,      url_prefix="/api/v1/groups")
@@ -133,6 +134,7 @@ def _register_blueprints(app: Flask) -> None:
     app.register_blueprint(expenses_bp,    url_prefix="/api/v1")
     app.register_blueprint(balances_bp,    url_prefix="/api/v1/groups")
     app.register_blueprint(settlements_bp, url_prefix="/api/v1/groups")
+    app.register_blueprint(users_bp,       url_prefix="/api/v1/users")
 
 
 def _register_error_handlers(app: Flask) -> None:

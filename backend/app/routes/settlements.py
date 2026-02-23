@@ -36,7 +36,9 @@ def _serialize_settlement(s: Settlement) -> dict:
         "id": s.id,
         "group_id": s.group_id,
         "paid_by_user_id": s.paid_by_user_id,
+        "paid_by_username": s.payer.username,        # <-- Uses 'payer'
         "paid_to_user_id": s.paid_to_user_id,
+        "paid_to_username": s.recipient.username,    # <-- Uses 'recipient'
         "amount": str(s.amount),  # Decimal → string (spec: never JS number)
         "created_at": s.created_at.isoformat(),
     }

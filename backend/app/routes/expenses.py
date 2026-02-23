@@ -28,6 +28,8 @@ from app.middleware.auth_middleware import require_auth
 from app.models.expense import Expense
 from app.schemas.expense_schema import CreateExpenseSchema, PatchExpenseSchema
 from app.services import expense_service
+from app.models.expense import Expense
+from app.models.split import Split
 
 expenses_bp = Blueprint("expenses", __name__)
 
@@ -41,8 +43,9 @@ def _serialize_expense(expense: Expense) -> dict:
         "id": expense.id,
         "group_id": expense.group_id,
         "paid_by_user_id": expense.paid_by_user_id,
+        "paid_by_username": expense.payer.username,     # <-- ADD THIS LINE
         "description": expense.description,
-        "amount": str(expense.amount),          # Decimal → string (spec: never JS number)
+        "amount": str(expense.amount),                  # Decimal → string
         "split_mode": expense.split_mode.value,
         "category": expense.category.value,
         "created_at": expense.created_at.isoformat(),
@@ -52,7 +55,8 @@ def _serialize_expense(expense: Expense) -> dict:
             {
                 "id": s.id,
                 "user_id": s.user_id,
-                "amount": str(s.amount),        # Decimal → string
+                "username": s.user.username,            # <-- ADD THIS LINE
+                "amount": str(s.amount),                # Decimal → string
             }
             for s in expense.splits
         ],
@@ -147,3 +151,40 @@ def delete_expense(expense_id: int):
         },
         "warnings": [],
     }), 200
+
+@expenses_bp.route("/groups/<int:group_id>/expenses/<int:expense_id>", methods=["PUT"])
+@require_auth
+def update_expense(group_id, expense_id):
+    # Use g.user_id to match your project's auth pattern
+    user_id = g.user_id
+    expense = Expense.query.filter_by(id=expense_id, group_id=group_id).first_or_404()
+
+    if expense.paid_by_user_id != user_id:
+        return jsonify({"error": "Only the payer can edit this expense"}), 403
+
+    data = request.get_json()
+
+    # Update main fields
+    expense.description = data.get("description", expense.description)
+    expense.amount = data.get("amount", expense.amount)
+    expense.category = data.get("category", expense.category)
+    expense.paid_by_user_id = data.get("paid_by_user_id", expense.paid_by_user_id)
+    expense.split_mode = data.get("split_mode", expense.split_mode)
+    expense.updated_at = db.func.now()
+
+    # UPDATE SPLITS
+    if "splits" in data:
+        # 1. Clear existing splits
+        Split.query.filter_by(expense_id=expense.id).delete()
+
+        # 2. Add new splits from the frontend payload
+        for s in data["splits"]:
+            new_split = Split(
+                expense_id=expense.id,
+                user_id=s["user_id"],
+                amount=s["amount"]
+            )
+            db.session.add(new_split)
+
+    db.session.commit() # This saves everything at once
+    return jsonify({"data": _serialize_expense(expense)}), 200
