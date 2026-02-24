@@ -17,7 +17,7 @@ import re
 
 from marshmallow import Schema, ValidationError, fields, validates, validate
 
-from app.errors import ErrorCode
+from backend.app.errors import ErrorCode
 
 
 class RegisterSchema(Schema):

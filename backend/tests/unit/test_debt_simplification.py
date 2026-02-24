@@ -30,7 +30,7 @@ from decimal import Decimal
 
 import pytest
 
-from app.services.balance_service import simplify_debts
+from backend.app.services.balance_service import simplify_debts
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────

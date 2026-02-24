@@ -13,9 +13,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.errors import AppError, ErrorCode
-from app.models.expense import Category, SplitMode
-from app.services import expense_service
+from backend.app.errors import AppError, ErrorCode
+from backend.app.models.expense import Category, SplitMode
+from backend.app.services import expense_service
 
 
 def _mock_scalars_all(session: MagicMock, rows: list) -> None:
@@ -162,7 +162,7 @@ def test_delete_splits_deletes_all_rows_and_flushes():
     session.flush.assert_called_once()
 
 
-@patch("app.services.expense_service.Split")
+@patch("backend.app.services.expense_service.Split")
 def test_create_split_rows_adds_split_models_and_flushes(mock_split_cls):
     session = MagicMock()
     expense = SimpleNamespace(id=88)
@@ -177,12 +177,12 @@ def test_create_split_rows_adds_split_models_and_flushes(mock_split_cls):
     session.flush.assert_called_once()
 
 
-@patch("app.services.expense_service._create_split_rows")
-@patch("app.services.expense_service.Expense")
-@patch("app.services.expense_service._get_member_ids", return_value=[1, 2])
-@patch("app.services.expense_service._validate_payer_is_member")
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_group_or_404")
+@patch("backend.app.services.expense_service._create_split_rows")
+@patch("backend.app.services.expense_service.Expense")
+@patch("backend.app.services.expense_service._get_member_ids", return_value=[1, 2])
+@patch("backend.app.services.expense_service._validate_payer_is_member")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_group_or_404")
 def test_create_expense_equal_mode_success(
     mock_get_group,
     mock_require_member,
@@ -228,14 +228,14 @@ def test_create_expense_equal_mode_success(
     mock_get_member_ids.assert_called_once()
 
 
-@patch("app.services.expense_service._create_split_rows")
-@patch("app.services.expense_service.Expense")
-@patch("app.services.expense_service._validate_split_sum")
-@patch("app.services.expense_service._validate_split_users_are_members")
-@patch("app.services.expense_service._get_member_ids", return_value=[1, 2])
-@patch("app.services.expense_service._validate_payer_is_member")
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_group_or_404")
+@patch("backend.app.services.expense_service._create_split_rows")
+@patch("backend.app.services.expense_service.Expense")
+@patch("backend.app.services.expense_service._validate_split_sum")
+@patch("backend.app.services.expense_service._validate_split_users_are_members")
+@patch("backend.app.services.expense_service._get_member_ids", return_value=[1, 2])
+@patch("backend.app.services.expense_service._validate_payer_is_member")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_group_or_404")
 def test_create_expense_custom_mode_success(
     mock_get_group,
     mock_require_member,
@@ -281,8 +281,8 @@ def test_create_expense_custom_mode_success(
     mock_validate_split_sum.assert_called_once_with(custom_splits, Decimal("10.00"), 1)
 
 
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_group_or_404")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_group_or_404")
 def test_list_expenses_returns_scalars(mock_get_group, mock_require_member):
     session = MagicMock()
     mock_get_group.return_value = SimpleNamespace(id=1)
@@ -297,8 +297,8 @@ def test_list_expenses_returns_scalars(mock_get_group, mock_require_member):
     session.execute.assert_called_once()
 
 
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_expense_or_404")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_expense_or_404")
 def test_get_expense_requires_membership_and_returns_row(mock_get_expense_or_404, mock_require_member):
     session = MagicMock()
     expense = SimpleNamespace(id=22, group_id=3)
@@ -311,8 +311,8 @@ def test_get_expense_requires_membership_and_returns_row(mock_get_expense_or_404
     mock_require_member.assert_called_once_with(3, 1, session)
 
 
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_expense_or_404")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_expense_or_404")
 def test_edit_expense_rejects_deleted(mock_get_expense_or_404, mock_require_member):
     session = MagicMock()
     mock_get_expense_or_404.return_value = SimpleNamespace(
@@ -333,9 +333,9 @@ def test_edit_expense_rejects_deleted(mock_get_expense_or_404, mock_require_memb
     assert err.http_status == 422
 
 
-@patch("app.services.expense_service._get_group_or_404")
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_expense_or_404")
+@patch("backend.app.services.expense_service._get_group_or_404")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_expense_or_404")
 def test_edit_expense_forbidden_for_non_payer_non_owner(
     mock_get_expense_or_404,
     mock_require_member,
@@ -361,14 +361,14 @@ def test_edit_expense_forbidden_for_non_payer_non_owner(
     assert err.http_status == 403
 
 
-@patch("app.services.expense_service._create_split_rows")
-@patch("app.services.expense_service._delete_splits")
-@patch("app.services.expense_service._compute_equal_splits")
-@patch("app.services.expense_service._get_member_ids", return_value=[1, 2])
-@patch("app.services.expense_service._validate_payer_is_member")
-@patch("app.services.expense_service._get_group_or_404")
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_expense_or_404")
+@patch("backend.app.services.expense_service._create_split_rows")
+@patch("backend.app.services.expense_service._delete_splits")
+@patch("backend.app.services.expense_service._compute_equal_splits")
+@patch("backend.app.services.expense_service._get_member_ids", return_value=[1, 2])
+@patch("backend.app.services.expense_service._validate_payer_is_member")
+@patch("backend.app.services.expense_service._get_group_or_404")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_expense_or_404")
 def test_edit_expense_equal_mode_recomputes_and_updates_fields(
     mock_get_expense_or_404,
     mock_require_member,
@@ -424,15 +424,15 @@ def test_edit_expense_equal_mode_recomputes_and_updates_fields(
     session.refresh.assert_called_once_with(expense)
 
 
-@patch("app.services.expense_service._create_split_rows")
-@patch("app.services.expense_service._delete_splits")
-@patch("app.services.expense_service._validate_split_sum")
-@patch("app.services.expense_service._validate_split_users_are_members")
-@patch("app.services.expense_service._get_member_ids", return_value=[1, 2])
-@patch("app.services.expense_service._validate_payer_is_member")
-@patch("app.services.expense_service._get_group_or_404")
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_expense_or_404")
+@patch("backend.app.services.expense_service._create_split_rows")
+@patch("backend.app.services.expense_service._delete_splits")
+@patch("backend.app.services.expense_service._validate_split_sum")
+@patch("backend.app.services.expense_service._validate_split_users_are_members")
+@patch("backend.app.services.expense_service._get_member_ids", return_value=[1, 2])
+@patch("backend.app.services.expense_service._validate_payer_is_member")
+@patch("backend.app.services.expense_service._get_group_or_404")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_expense_or_404")
 def test_edit_expense_custom_revalidates_and_rewrites_splits(
     mock_get_expense_or_404,
     mock_require_member,
@@ -488,9 +488,9 @@ def test_edit_expense_custom_revalidates_and_rewrites_splits(
     session.refresh.assert_called_once_with(expense)
 
 
-@patch("app.services.expense_service._get_group_or_404")
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_expense_or_404")
+@patch("backend.app.services.expense_service._get_group_or_404")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_expense_or_404")
 def test_delete_expense_sets_deleted_at_for_authorized_user(
     mock_get_expense_or_404,
     mock_require_member,
@@ -513,9 +513,9 @@ def test_delete_expense_sets_deleted_at_for_authorized_user(
     session.flush.assert_called_once()
 
 
-@patch("app.services.expense_service._get_group_or_404")
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_expense_or_404")
+@patch("backend.app.services.expense_service._get_group_or_404")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_expense_or_404")
 def test_delete_expense_idempotent_when_already_deleted(
     mock_get_expense_or_404,
     mock_require_member,
@@ -537,9 +537,9 @@ def test_delete_expense_idempotent_when_already_deleted(
     session.flush.assert_not_called()
 
 
-@patch("app.services.expense_service._get_group_or_404")
-@patch("app.services.expense_service._require_member")
-@patch("app.services.expense_service._get_expense_or_404")
+@patch("backend.app.services.expense_service._get_group_or_404")
+@patch("backend.app.services.expense_service._require_member")
+@patch("backend.app.services.expense_service._get_expense_or_404")
 def test_delete_expense_forbidden_for_non_owner_non_payer(
     mock_get_expense_or_404,
     mock_require_member,

@@ -17,11 +17,11 @@ from __future__ import annotations
 
 from flask import Blueprint, g, jsonify, request
 
-from app.errors import AppError, ErrorCode
-from app.extensions import db
-from app.middleware.auth_middleware import require_auth
-from app.models.expense import Category
-from app.services import balance_service
+from backend.app.errors import AppError, ErrorCode
+from backend.app.extensions import db
+from backend.app.middleware.auth_middleware import require_auth
+from backend.app.models.expense import Category
+from backend.app.services import balance_service
 
 balances_bp = Blueprint("balances", __name__)
 

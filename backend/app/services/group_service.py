@@ -18,10 +18,10 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.errors import AppError, ErrorCode
-from app.models.group import Group
-from app.models.membership import Membership
-from app.models.user import User
+from backend.app.errors import AppError, ErrorCode
+from backend.app.models.group import Group
+from backend.app.models.membership import Membership
+from backend.app.models.user import User
 
 
 # ── Private helpers ────────────────────────────────────────────────────────

@@ -40,9 +40,9 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.errors import AppError, ErrorCode
-from app.models.refresh_token import RefreshToken
-from app.models.user import User
+from backend.app.errors import AppError, ErrorCode
+from backend.app.models.refresh_token import RefreshToken
+from backend.app.models.user import User
 
 
 # ── Private helpers ────────────────────────────────────────────────────────

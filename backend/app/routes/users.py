@@ -1,10 +1,10 @@
 # backend/app/routes/users.py
 from flask import Blueprint, jsonify
 from sqlalchemy import select
-from app.extensions import db
-from app.models.user import User
-from app.middleware.auth_middleware import require_auth
-from app.errors import AppError, ErrorCode
+from backend.app.extensions import db
+from backend.app.models.user import User
+from backend.app.middleware.auth_middleware import require_auth
+from backend.app.errors import AppError, ErrorCode
 
 users_bp = Blueprint("users", __name__)
 

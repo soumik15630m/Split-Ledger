@@ -31,8 +31,8 @@ from __future__ import annotations
 
 import pytest
 
-from app import create_app
-from app.extensions import db as _db
+from backend.app import create_app
+from backend.app.extensions import db as _db
 
 
 # ═══════════════════════════════════════════════════════════════════════════

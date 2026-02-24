@@ -23,13 +23,13 @@ from __future__ import annotations
 
 from flask import Blueprint, g, jsonify, request
 
-from app.extensions import db
-from app.middleware.auth_middleware import require_auth
-from app.models.expense import Expense
-from app.schemas.expense_schema import CreateExpenseSchema, PatchExpenseSchema
-from app.services import expense_service
-from app.models.expense import Expense
-from app.models.split import Split
+from backend.app.extensions import db
+from backend.app.middleware.auth_middleware import require_auth
+from backend.app.models.expense import Expense
+from backend.app.schemas.expense_schema import CreateExpenseSchema, PatchExpenseSchema
+from backend.app.services import expense_service
+from backend.app.models.expense import Expense
+from backend.app.models.split import Split
 
 expenses_bp = Blueprint("expenses", __name__)
 

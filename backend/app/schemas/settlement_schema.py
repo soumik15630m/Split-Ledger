@@ -24,7 +24,7 @@ from decimal import Decimal
 
 from marshmallow import Schema, ValidationError, fields, validate
 
-from app.errors import ErrorCode
+from backend.app.errors import ErrorCode
 
 
 # ── Shared monetary amount validator ──────────────────────────────────────

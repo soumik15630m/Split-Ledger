@@ -12,7 +12,7 @@ from datetime import datetime
 from sqlalchemy import CheckConstraint, DateTime, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.extensions import db
+from backend.app.extensions import db
 
 
 class User(db.Model):

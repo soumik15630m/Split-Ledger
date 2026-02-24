@@ -27,7 +27,7 @@ import pytest
 # _compute_equal_splits is a module-level private function.
 # ARCHITECTURE.md Section 9 explicitly lists test_equal_split.py as testing this function.
 # The single-underscore prefix is a convention, not a name-mangling barrier.
-from app.services.expense_service import _compute_equal_splits
+from backend.app.services.expense_service import _compute_equal_splits
 
 
 # ── Invariant helper ───────────────────────────────────────────────────────

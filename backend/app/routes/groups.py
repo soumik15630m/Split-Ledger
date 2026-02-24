@@ -17,10 +17,10 @@ from __future__ import annotations
 
 from flask import Blueprint, g, jsonify, request
 
-from app.extensions import db
-from app.middleware.auth_middleware import require_auth
-from app.schemas.group_schema import AddMemberSchema, CreateGroupSchema
-from app.services import group_service
+from backend.app.extensions import db
+from backend.app.middleware.auth_middleware import require_auth
+from backend.app.schemas.group_schema import AddMemberSchema, CreateGroupSchema
+from backend.app.services import group_service
 
 groups_bp = Blueprint("groups", __name__)
 

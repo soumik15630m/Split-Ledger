@@ -31,7 +31,7 @@ from typing import Callable
 import jwt
 from flask import current_app, g, request
 
-from app.errors import AppError, ErrorCode
+from backend.app.errors import AppError, ErrorCode
 
 
 def require_auth(f: Callable) -> Callable:

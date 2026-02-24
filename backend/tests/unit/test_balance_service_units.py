@@ -13,9 +13,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.errors import AppError, ErrorCode
-from app.models.expense import Category
-from app.services import balance_service
+from backend.app.errors import AppError, ErrorCode
+from backend.app.models.expense import Category
+from backend.app.services import balance_service
 
 
 def _mock_scalars_all(session: MagicMock, rows: list) -> None:
@@ -97,7 +97,7 @@ def test_get_balance_response_raises_group_not_found():
     assert err.http_status == 404
 
 
-@patch("app.services.balance_service.get_member_ids", return_value=[2, 3])
+@patch("backend.app.services.balance_service.get_member_ids", return_value=[2, 3])
 def test_get_balance_response_raises_forbidden_for_non_member(mock_member_ids):
     session = MagicMock()
     session.get.return_value = SimpleNamespace(id=42)
@@ -111,10 +111,10 @@ def test_get_balance_response_raises_forbidden_for_non_member(mock_member_ids):
     mock_member_ids.assert_called_once()
 
 
-@patch("app.services.balance_service.simplify_debts")
-@patch("app.services.balance_service.get_members")
-@patch("app.services.balance_service.compute_balances")
-@patch("app.services.balance_service.get_member_ids", return_value=[1, 2])
+@patch("backend.app.services.balance_service.simplify_debts")
+@patch("backend.app.services.balance_service.get_members")
+@patch("backend.app.services.balance_service.compute_balances")
+@patch("backend.app.services.balance_service.get_member_ids", return_value=[1, 2])
 def test_get_balance_response_unfiltered_happy_path(
     mock_member_ids,
     mock_compute_balances,
@@ -160,9 +160,9 @@ def test_get_balance_response_unfiltered_happy_path(
     mock_simplify_debts.assert_called_once()
 
 
-@patch("app.services.balance_service.get_members")
-@patch("app.services.balance_service.compute_balances")
-@patch("app.services.balance_service.get_member_ids", return_value=[1, 2])
+@patch("backend.app.services.balance_service.get_members")
+@patch("backend.app.services.balance_service.compute_balances")
+@patch("backend.app.services.balance_service.get_member_ids", return_value=[1, 2])
 def test_get_balance_response_unfiltered_raises_internal_error_on_nonzero_sum(
     mock_member_ids,
     mock_compute_balances,
@@ -192,10 +192,10 @@ def test_get_balance_response_unfiltered_raises_internal_error_on_nonzero_sum(
     mock_get_members.assert_called_once()
 
 
-@patch("app.services.balance_service.simplify_debts")
-@patch("app.services.balance_service.get_members")
-@patch("app.services.balance_service.compute_balances")
-@patch("app.services.balance_service.get_member_ids", return_value=[1, 2])
+@patch("backend.app.services.balance_service.simplify_debts")
+@patch("backend.app.services.balance_service.get_members")
+@patch("backend.app.services.balance_service.compute_balances")
+@patch("backend.app.services.balance_service.get_member_ids", return_value=[1, 2])
 def test_get_balance_response_category_filtered_skips_simplification(
     mock_member_ids,
     mock_compute_balances,

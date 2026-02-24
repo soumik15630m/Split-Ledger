@@ -34,12 +34,12 @@ from decimal import Decimal, ROUND_DOWN
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.errors import AppError, ErrorCode
-from app.models.expense import Category, Expense, SplitMode
-from app.models.group import Group
-from app.models.membership import Membership
-from app.models.split import Split
-from app.models.user import User
+from backend.app.errors import AppError, ErrorCode
+from backend.app.models.expense import Category, Expense, SplitMode
+from backend.app.models.group import Group
+from backend.app.models.membership import Membership
+from backend.app.models.split import Split
+from backend.app.models.user import User
 
 
 # ── Private helpers ────────────────────────────────────────────────────────

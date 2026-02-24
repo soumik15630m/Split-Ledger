@@ -15,7 +15,7 @@ from datetime import datetime
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.extensions import db
+from backend.app.extensions import db
 
 
 class RefreshToken(db.Model):

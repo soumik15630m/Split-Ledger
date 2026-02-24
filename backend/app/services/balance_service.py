@@ -32,12 +32,12 @@ from decimal import Decimal
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.errors import AppError, ErrorCode
-from app.models.expense import Category, Expense
-from app.models.membership import Membership
-from app.models.settlement import Settlement
-from app.models.split import Split
-from app.models.user import User
+from backend.app.errors import AppError, ErrorCode
+from backend.app.models.expense import Category, Expense
+from backend.app.models.membership import Membership
+from backend.app.models.settlement import Settlement
+from backend.app.models.split import Split
+from backend.app.models.user import User
 
 
 # ── Data access helpers ────────────────────────────────────────────────────
@@ -250,7 +250,7 @@ def get_balance_response(
         AppError(INTERNAL_ERROR, 500)   -- INV-2 violated on unfiltered computation.
     """
     # Verify group exists.
-    from app.models.group import Group  # local import to avoid circular dep
+    from backend.app.models.group import Group  # local import to avoid circular dep
     group = session.get(Group, group_id)
     if group is None:
         raise AppError(

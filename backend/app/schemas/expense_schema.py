@@ -34,8 +34,8 @@ from marshmallow import (
     validates_schema,
 )
 
-from app.errors import ErrorCode
-from app.models.expense import Category, SplitMode
+from backend.app.errors import ErrorCode
+from backend.app.models.expense import Category, SplitMode
 
 
 # ── Shared monetary amount validator ──────────────────────────────────────

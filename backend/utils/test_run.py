@@ -669,6 +669,7 @@ def run(
     if extra:
         pytest_args += extra
 
+    print(pytest_args)
     # ── Live progress + dot stream ────────────────────────────────────────
     stream = Text("        ", overflow="fold", no_wrap=False)
 

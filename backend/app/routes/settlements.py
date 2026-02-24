@@ -19,11 +19,11 @@ from __future__ import annotations
 
 from flask import Blueprint, g, jsonify, request
 
-from app.extensions import db
-from app.middleware.auth_middleware import require_auth
-from app.models.settlement import Settlement
-from app.schemas.settlement_schema import CreateSettlementSchema
-from app.services import settlement_service
+from backend.app.extensions import db
+from backend.app.middleware.auth_middleware import require_auth
+from backend.app.models.settlement import Settlement
+from backend.app.schemas.settlement_schema import CreateSettlementSchema
+from backend.app.services import settlement_service
 
 settlements_bp = Blueprint("settlements", __name__)
 

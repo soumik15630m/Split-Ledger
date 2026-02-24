@@ -29,17 +29,17 @@ import pytest
 from marshmallow import ValidationError
 
 # Schemas under test
-from app.schemas.auth_schema import LoginSchema, RefreshTokenSchema, RegisterSchema
-from app.schemas.expense_schema import (
+from backend.app.schemas.auth_schema import LoginSchema, RefreshTokenSchema, RegisterSchema
+from backend.app.schemas.expense_schema import (
     CreateExpenseSchema,
     PatchExpenseSchema,
     SplitInputSchema,
 )
-from app.schemas.group_schema import AddMemberSchema, CreateGroupSchema
-from app.schemas.settlement_schema import CreateSettlementSchema
+from backend.app.schemas.group_schema import AddMemberSchema, CreateGroupSchema
+from backend.app.schemas.settlement_schema import CreateSettlementSchema
 
 # Error codes — used to assert exact code strings
-from app.errors import ErrorCode
+from backend.app.errors import ErrorCode
 
 
 # ═══════════════════════════════════════════════════════════════════════════

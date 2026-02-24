@@ -33,11 +33,11 @@ from decimal import Decimal
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.errors import AppError, ErrorCode, WarningCode
-from app.models.expense import Expense
-from app.models.membership import Membership
-from app.models.settlement import Settlement
-from app.models.split import Split
+from backend.app.errors import AppError, ErrorCode, WarningCode
+from backend.app.models.expense import Expense
+from backend.app.models.membership import Membership
+from backend.app.models.settlement import Settlement
+from backend.app.models.split import Split
 
 
 # ── Private helpers ────────────────────────────────────────────────────────
@@ -170,7 +170,7 @@ def create_settlement(
         An empty warnings list means no warnings.
         Example warning: {"code": "OVERPAYMENT", "message": "..."}
     """
-    from app.models.group import Group  # local import to avoid circular dep
+    from backend.app.models.group import Group  # local import to avoid circular dep
 
     group = session.get(Group, group_id)
     if group is None:
@@ -250,7 +250,7 @@ def list_settlements(
 
     INV-9: caller must be a group member (FORBIDDEN, 403).
     """
-    from app.models.group import Group  # local import to avoid circular dep
+    from backend.app.models.group import Group  # local import to avoid circular dep
 
     group = session.get(Group, group_id)
     if group is None:

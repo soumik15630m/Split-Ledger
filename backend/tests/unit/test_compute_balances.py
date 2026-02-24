@@ -29,7 +29,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.services.balance_service import compute_balances, simplify_debts
+from backend.app.services.balance_service import compute_balances, simplify_debts
 
 
 # ── Mock factory helpers ───────────────────────────────────────────────────
@@ -66,7 +66,7 @@ def _settlement(paid_by: int, paid_to: int, amount: str) -> MagicMock:
 # These are the DB-accessing helpers inside balance_service that we replace
 # with controlled return values so the tests run without a database.
 
-_PATCH_BASE = "app.services.balance_service"
+_PATCH_BASE = "backend.app.services.balance_service"
 _PATCH_EXPENSES    = f"{_PATCH_BASE}.get_active_expenses"
 _PATCH_SPLITS      = f"{_PATCH_BASE}.get_splits_for_active_expenses"
 _PATCH_SETTLEMENTS = f"{_PATCH_BASE}.get_settlements"
@@ -268,7 +268,7 @@ def test_category_filter_settlements_not_included(
     mock_settlements.return_value = [_settlement(paid_by=2, paid_to=1, amount="50.00")]
     mock_member_ids.return_value  = [1, 2]
 
-    from app.models.expense import Category
+    from backend.app.models.expense import Category
     result = compute_balances(group_id=1, session=MagicMock(), category=Category.FOOD)
 
     # Settlements should NOT be called for category-filtered computation.

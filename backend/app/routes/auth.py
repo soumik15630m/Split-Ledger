@@ -24,10 +24,10 @@ from __future__ import annotations
 
 from flask import Blueprint, g, jsonify, request
 
-from app.extensions import db
-from app.middleware.auth_middleware import require_auth
-from app.schemas.auth_schema import LoginSchema, RefreshTokenSchema, RegisterSchema
-from app.services import auth_service
+from backend.app.extensions import db
+from backend.app.middleware.auth_middleware import require_auth
+from backend.app.schemas.auth_schema import LoginSchema, RefreshTokenSchema, RegisterSchema
+from backend.app.services import auth_service
 
 auth_bp = Blueprint("auth", __name__)
 

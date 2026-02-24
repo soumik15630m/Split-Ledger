@@ -10,8 +10,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from app.errors import AppError, ErrorCode
-from app.services import auth_service
+from backend.app.errors import AppError, ErrorCode
+from backend.app.services import auth_service
 
 
 def test_get_current_user_returns_serialized_user():

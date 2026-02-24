@@ -25,8 +25,8 @@ from decimal import Decimal
 
 import pytest
 
-from app.errors import AppError, ErrorCode
-from app.services.expense_service import _validate_split_sum
+from backend.app.errors import AppError, ErrorCode
+from backend.app.services.expense_service import _validate_split_sum
 
 
 # ── Helper ─────────────────────────────────────────────────────────────────

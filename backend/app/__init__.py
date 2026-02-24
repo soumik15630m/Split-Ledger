@@ -81,7 +81,7 @@ def create_app(config_name: str = "development") -> Flask:
 
     # ── Extensions ─────────────────────────────────────────────────────────
     # Import here (not at module top) to avoid circular imports.
-    from app.extensions import db, ma
+    from backend.app.extensions import db, ma
     db.init_app(app)
     ma.init_app(app)
 
@@ -90,7 +90,7 @@ def create_app(config_name: str = "development") -> Flask:
     # Alembic needs to see these to auto-generate migrations.
     # The imports are intentionally unused by name — side effect is the point.
     with app.app_context():
-        from app.models import (  # noqa: F401
+        from backend.app.models import (  # noqa: F401
             expense,
             group,
             membership,
@@ -119,12 +119,12 @@ def _register_blueprints(app: Flask) -> None:
     The url_prefix is set here so individual route files only specify
     the path relative to their resource (e.g. "/" and "/<int:id>").
     """
-    from app.routes.auth import auth_bp
-    from app.routes.balances import balances_bp
-    from app.routes.expenses import expenses_bp
-    from app.routes.groups import groups_bp
-    from app.routes.settlements import settlements_bp
-    from app.routes.users import users_bp
+    from backend.app.routes.auth import auth_bp
+    from backend.app.routes.balances import balances_bp
+    from backend.app.routes.expenses import expenses_bp
+    from backend.app.routes.groups import groups_bp
+    from backend.app.routes.settlements import settlements_bp
+    from backend.app.routes.users import users_bp
 
     app.register_blueprint(auth_bp,        url_prefix="/api/v1/auth")
     app.register_blueprint(groups_bp,      url_prefix="/api/v1/groups")
@@ -152,7 +152,7 @@ def _register_error_handlers(app: Flask) -> None:
       In production, only {"error": {"code": "INTERNAL_ERROR", "message": "..."}}
       is returned. The traceback is written to the app logger.
     """
-    from app.errors import AppError, ErrorCode
+    from backend.app.errors import AppError, ErrorCode
 
     @app.errorhandler(AppError)
     def handle_app_error(error: AppError):
@@ -176,7 +176,7 @@ def _register_error_handlers(app: Flask) -> None:
         The error code from the ValidationError message is used directly if it
         matches a known ErrorCode constant; otherwise INVALID_FIELD is used.
         """
-        from app.errors import ErrorCode
+        from backend.app.errors import ErrorCode
 
         # Flatten the nested messages dict to find the first field+message pair.
         messages = error.messages  # e.g. {"amount": ["INVALID_AMOUNT_PRECISION"]}

@@ -8,8 +8,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from app.errors import AppError, ErrorCode
-from app.services import settlement_service
+from backend.app.errors import AppError, ErrorCode
+from backend.app.services import settlement_service
 
 
 def test_list_settlements_raises_group_not_found():

@@ -12,8 +12,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.errors import AppError, ErrorCode
-from app.services import group_service
+from backend.app.errors import AppError, ErrorCode
+from backend.app.services import group_service
 
 
 def _mock_scalars_all(session: MagicMock, rows: list) -> None:
@@ -82,9 +82,9 @@ def test_list_groups_serializes_groups():
     session.execute.assert_called_once()
 
 
-@patch("app.services.group_service._build_group_dict")
-@patch("app.services.group_service._require_member")
-@patch("app.services.group_service._get_group_or_404")
+@patch("backend.app.services.group_service._build_group_dict")
+@patch("backend.app.services.group_service._require_member")
+@patch("backend.app.services.group_service._get_group_or_404")
 def test_get_group_returns_group_with_members(
     mock_get_group_or_404,
     mock_require_member,
@@ -110,7 +110,7 @@ def test_get_group_returns_group_with_members(
     session.execute.assert_called_once()
 
 
-@patch("app.services.group_service._get_group_or_404")
+@patch("backend.app.services.group_service._get_group_or_404")
 def test_add_member_non_owner_raises_forbidden(mock_get_group_or_404):
     session = MagicMock()
     mock_get_group_or_404.return_value = SimpleNamespace(id=1, owner_user_id=100)
@@ -128,7 +128,7 @@ def test_add_member_non_owner_raises_forbidden(mock_get_group_or_404):
     assert err.http_status == 403
 
 
-@patch("app.services.group_service._get_group_or_404")
+@patch("backend.app.services.group_service._get_group_or_404")
 def test_add_member_target_user_missing_raises_404(mock_get_group_or_404):
     session = MagicMock()
     mock_get_group_or_404.return_value = SimpleNamespace(id=1, owner_user_id=100)
@@ -147,7 +147,7 @@ def test_add_member_target_user_missing_raises_404(mock_get_group_or_404):
     assert err.http_status == 404
 
 
-@patch("app.services.group_service._get_group_or_404")
+@patch("backend.app.services.group_service._get_group_or_404")
 def test_add_member_already_member_raises_409(mock_get_group_or_404):
     session = MagicMock()
     mock_get_group_or_404.return_value = SimpleNamespace(id=1, owner_user_id=100)
@@ -167,8 +167,8 @@ def test_add_member_already_member_raises_409(mock_get_group_or_404):
     assert err.http_status == 409
 
 
-@patch("app.services.group_service._require_member")
-@patch("app.services.group_service._get_group_or_404")
+@patch("backend.app.services.group_service._require_member")
+@patch("backend.app.services.group_service._get_group_or_404")
 def test_remove_member_non_owner_cannot_remove_other(
     mock_get_group_or_404,
     mock_require_member,
@@ -190,8 +190,8 @@ def test_remove_member_non_owner_cannot_remove_other(
     mock_require_member.assert_called_once_with(1, 20, session)
 
 
-@patch("app.services.group_service._require_member")
-@patch("app.services.group_service._get_group_or_404")
+@patch("backend.app.services.group_service._require_member")
+@patch("backend.app.services.group_service._get_group_or_404")
 def test_remove_member_raises_user_not_found_when_target_not_member(
     mock_get_group_or_404,
     mock_require_member,
@@ -214,8 +214,8 @@ def test_remove_member_raises_user_not_found_when_target_not_member(
     mock_require_member.assert_called_once_with(1, 10, session)
 
 
-@patch("app.services.group_service._require_member")
-@patch("app.services.group_service._get_group_or_404")
+@patch("backend.app.services.group_service._require_member")
+@patch("backend.app.services.group_service._get_group_or_404")
 def test_remove_member_owner_success_deletes_membership(
     mock_get_group_or_404,
     mock_require_member,
