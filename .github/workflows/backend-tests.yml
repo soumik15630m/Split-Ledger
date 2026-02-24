@@ -39,8 +39,8 @@ jobs:
 
       - name: Run Backend Tests With Coverage Gate
         env:
+          WORKING_DIRECTORY: backend
           FLASK_ENV: testing
           TEST_DATABASE_URL: postgresql://splitledger:splitledger_test_password@localhost:5432/splitledger_test
         run: |
-          cd backend
           pytest tests --cov=app.services --cov=app.schemas --cov-fail-under=90
