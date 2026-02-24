@@ -264,7 +264,8 @@ python backend/utils/test_run.py -k balance      # only tests matching "balance"
 pytest backend/tests/unit                # unit only
 pytest backend/tests/integration         # integration only
 pytest                                   # everything
-pytest --cov=app.services --cov=app.schemas --cov-report=term-missing
+# Note: For coverage, set PYTHONPATH to the current directory and use path slashes
+PYTHONPATH=. pytest tests --cov=app/services --cov=app/schemas --cov-report=term-missing
 ```
 
 ---

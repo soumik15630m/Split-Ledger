@@ -144,8 +144,15 @@ pytest backend/tests/integration/
 # With coverage report
 pytest --cov=app --cov-report=term-missing
 
+# With coverage report (Note: Use folder slashes, not Python dots, for coverage paths!)
+# Windows (PowerShell):
+$env:PYTHONPATH="." ; pytest tests --cov=app/services --cov=app/schemas --cov-report=term-missing
+
+# macOS/Linux:
+PYTHONPATH=. pytest tests --cov=app/services --cov=app/schemas --cov-report=term-missing
+
 # Coverage must meet thresholds — will fail if below 90% on core services
-pytest --cov=app --cov-fail-under=90
+PYTHONPATH=. pytest tests --cov=app/services --cov=app/schemas --cov-fail-under=90
 ```
 
 ### Frontend
